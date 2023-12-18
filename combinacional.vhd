@@ -4,7 +4,7 @@ USE ieee.std_logic_1164.all;
 ENTITY combinacional IS
 PORT (
         --puerto de entrada para registros
-        D : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+        D : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
 
         --seleccion de operacion, y seleccion de registro
         Slct : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
@@ -15,15 +15,17 @@ PORT (
         estado_actual: inout std_logic_vector(2 downto 0);
 
         --salida, muestra un registro seleccionado
-        Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+        Q : OUT STD_LOGIC_VECTOR(1 DOWNTO 0)
     );
 END combinacional;
 
 architecture Behavior of combinacional is
+
+SIGNAL D1, D2, D3 : std_logic_vector(1 downto 0);
+
 begin
     process(Clk, Slct)
-    begin
-    VARIABLE D1, D2, D3 : std_logic_vector(3 downto 0);
+	begin
 
     if rising_edge(Clk) then
 
