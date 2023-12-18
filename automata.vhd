@@ -3,48 +3,49 @@ USE ieee.std_logic_1164.all;
 
 ENTITY automata IS
 	PORT ( 
-        D0 : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-	    Clock : IN STD_LOGIC;
-        S : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
-		OE : IN STD_LOGIC;
-		LE : IN STD_LOGIC;
-		LOAD : IN STD_LOGIC;
-		SWAPT : IN STD_LOGIC; 
+        D : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+	    input_bit, Slct : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+		Clk : IN std_logic;
+
 	    Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0) 
     );
 END automata;
 
-architecture structural of automata is
-	component reg8 is
-	  port (
-		D : in std_logic_vector(3 downto 0);
-		Clock : in std_logic;
-		Q : out std_logic_vector(3 downto 0)
-	  );
-	end component;
+architecture Behavior of automata is
 	
+	signal estado_actual, siguiente_estado : std_logic_vector(2 downto 0);
 	signal D1, D2, D3 : std_logic_vector(3 downto 0);
-	signal Clock : std_logic;
-	signal Q1, Q2, Q3 : std_logic_vector(3 downto 0);
-	
-  begin
-	instance1: reg8 port map (
-	  D => D1,
-	  Clock => Clock,
-	  Q => Q1
-	);
-	
-	instance2: reg8 port map (
-	  D => D2,
-	  Clock => Clock,
-	  Q => Q2
-	);
-	
-	instance3: reg8 port map (
-	  D => D3,
-	  Clock => Clock,
-	  Q => Q3
-	);
+
+	begin
+		siguiente_estado <= "0000";
+
+		process(Clk, input_bit, estado_actual, Slct)
+
+			when Clock'EVENT AND Clock = '1'
+				
+				estado_actual <= siguiente_estado;
+
+				\los estados A, B, C o F pueden dar lugar a A, B, C o D \
+				if 	estado_actual = "000" or estado_actual = "001"
+					or estado_actual = "010" or estado_actual = "101" THEN
+
+						if input_bit = "00" THEN
+							siguiente_estado = "000";
+						elsif input_bit = "01" THEN
+							siguiente_estado = "001";
+						elsif input_bit = "10" THEN
+							siguiente_estado = "010";
+						elsif input_bit = "11" THEN
+							siguiente_estado = "011";
+							
+				\ D, E solo pueden dar lugar al siguiente estado\
+				elsif estado_actual = "011" THEN
+					siguiente_estado = "100";
+				elsif estado_actual = "100" THEN
+					siguiente_estado = "101";
+
+
+
 
 
   end architecture;
